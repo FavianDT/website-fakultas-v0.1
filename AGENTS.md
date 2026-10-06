@@ -18,3 +18,5 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Hanya Tendik yang boleh ACC, Revisi, Tolak. Prodi dan Fakultas read-only.
 - Impor memakai alias `@/`. Tipe hanya dari `src/types`.
 - Jangan mengedit file di luar folder yang menjadi tugas Anda (lihat CONTRIBUTING.md).
+
+- Proteksi rute memakai `src/proxy.ts` (Next.js 16), bukan `middleware.ts`.

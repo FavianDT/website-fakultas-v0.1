@@ -11,7 +11,7 @@
 | Pemilik | Folder |
 |---|---|
 | A1 | src/types, src/lib (termasuk lib/services), src/hooks, docs |
-| A2 | src/middleware.ts atau proxy.ts, app/(auth), app/page.tsx, components/shared, semua dashboard/*/layout.tsx |
+| A2 | src/proxy.ts, app/(auth), app/page.tsx, components/shared, semua dashboard/*/layout.tsx |
 | A3 | components/ui, app/verify, lib/documents |
 | Tim B | app/dashboard/student (kecuali layout.tsx), components/modules/student |
 | Tim C | app/dashboard/staff dan executive (kecuali layout.tsx), components/modules/staff dan executive |

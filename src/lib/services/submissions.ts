@@ -59,6 +59,9 @@ export async function resubmitRevision(
   berkas: UploadedFile[]
 ): Promise<SubmissionRecord> {
   const item = find(id);
+  if (item.status !== "revisi") {
+    throw new Error("Pengajuan hanya dapat diajukan ulang jika berstatus revisi");
+  }
   item.berkas = berkas;
   item.status = "diproses";
   item.catatanRevisi = undefined;
@@ -70,6 +73,9 @@ export async function approveSubmission(
   tendikName: string
 ): Promise<SubmissionRecord> {
   const item = find(id);
+  if (item.status !== "diproses") {
+    throw new Error("Pengajuan hanya dapat disetujui jika berstatus diproses");
+  }
   const letter = await generateLetter(item);
   item.status = "selesai";
   item.nomorSurat = letter.nomorSurat;
@@ -84,6 +90,9 @@ export async function requestRevision(
   catatan: string
 ): Promise<SubmissionRecord> {
   const item = find(id);
+  if (item.status !== "diproses") {
+    throw new Error("Revisi hanya dapat diminta jika pengajuan berstatus diproses");
+  }
   item.status = "revisi";
   item.catatanRevisi = catatan;
   return item;
@@ -94,6 +103,9 @@ export async function rejectSubmission(
   alasan: string
 ): Promise<SubmissionRecord> {
   const item = find(id);
+  if (item.status !== "diproses") {
+    throw new Error("Pengajuan hanya dapat ditolak jika berstatus diproses");
+  }
   item.status = "ditolak";
   item.alasanTolak = alasan;
   return item;

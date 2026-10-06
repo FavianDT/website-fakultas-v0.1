@@ -1,5 +1,5 @@
 import { PAYMENTS } from "@/lib/mock-data";
-import type { PaymentRecord, NewPaymentInput } from "@/types/layanan";
+import type { PaymentRecord, NewPaymentInput, UploadedFile } from "@/types/layanan";
 import type { ProdiType } from "@/types/auth";
 
 const store: PaymentRecord[] = [...PAYMENTS];
@@ -34,14 +34,35 @@ export async function createPayment(
 
 export async function verifyPayment(
   id: string,
-  approve: boolean,
+  keputusan: "selesai" | "ditolak" | "revisi",
   tendikName: string,
   catatan?: string
 ): Promise<PaymentRecord> {
   const item = store.find((p) => p.id === id);
   if (!item) throw new Error(`Pembayaran ${id} tidak ditemukan`);
-  item.status = approve ? "selesai" : "ditolak";
+  if (item.status !== "diproses") {
+    throw new Error("Pembayaran hanya dapat diverifikasi jika berstatus diproses");
+  }
+  if (keputusan !== "selesai" && !catatan?.trim()) {
+    throw new Error("Catatan wajib diisi untuk keputusan ditolak atau revisi");
+  }
+  item.status = keputusan;
   item.catatan = catatan;
   item.diverifikasiOleh = tendikName;
+  return item;
+}
+
+export async function resubmitPayment(
+  id: string,
+  buktiTransfer: UploadedFile
+): Promise<PaymentRecord> {
+  const item = store.find((p) => p.id === id);
+  if (!item) throw new Error(`Pembayaran ${id} tidak ditemukan`);
+  if (item.status !== "revisi") {
+    throw new Error("Pembayaran hanya dapat diajukan ulang jika berstatus revisi");
+  }
+  item.buktiTransfer = buktiTransfer;
+  item.status = "diproses";
+  item.catatan = undefined;
   return item;
 }

@@ -13,14 +13,17 @@ export async function getSummary(
   return {
     totalTerbit: all.filter((s) => s.status === "selesai").length,
     totalDiproses: all.filter((s) => s.status === "diproses").length,
+    // DATA MOCK
     rataRataHari: 2,
     perProdi,
   };
 }
 
+// DATA MOCK
 export async function getTrend(
   _scope: { prodi?: ProdiType } = {}
 ): Promise<TrendPoint[]> {
+  void _scope;
   return [
     { bulan: "Jul", layanan: 12, praktikum: 5 },
     { bulan: "Agu", layanan: 18, praktikum: 9 },
