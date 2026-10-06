@@ -34,3 +34,7 @@ Jangan mengedit folder milik orang lain. Butuh perubahan? Buka issue dan sebut p
 3. Tampilan responsif di ponsel
 4. Ada skeleton dan empty state
 5. Hanya mengubah folder milik sendiri
+
+## Dokumen kondisi proyek
+
+`docs/PROJECT_STATE.md` hanya diperbarui oleh A1 setiap akhir fase (hari 3, 9, 12). Anggota lain tidak mengeditnya.
