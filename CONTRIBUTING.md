@@ -13,8 +13,8 @@
 | A1 | src/types, src/lib (termasuk lib/services), src/hooks, docs |
 | A2 | src/proxy.ts, app/(auth), app/page.tsx, components/shared, semua dashboard/*/layout.tsx |
 | A3 | components/ui, app/verify, lib/documents |
-| Tim B | app/dashboard/student (kecuali layout.tsx), components/modules/student |
-| Tim C | app/dashboard/staff dan executive (kecuali layout.tsx), components/modules/staff dan executive |
+| Tim B | app/dashboard/student/**/page.tsx saja |
+| Tim C | app/dashboard/staff dan executive, hanya page.tsx |
 
 Jangan mengedit folder milik orang lain. Butuh perubahan? Buka issue dan sebut pemiliknya.
 
@@ -86,3 +86,41 @@ Untuk memastikan seluruh anggota dapat bekerja secara paralel tanpa mengalami *m
    git checkout main
    git pull origin main
    git checkout <nama-branch-kamu>
+
+## Aturan khusus Tim B dan Tim C (mode tampilan)
+
+Tim B dan Tim C hanya mengerjakan susunan dan gaya halaman.
+
+Boleh:
+
+- Mengedit `page.tsx` di folder halaman masing-masing.
+- Menyusun komponen dari `components/ui`, `components/shared`, dan `components/modules`.
+- Gaya Tailwind, teks, dan ikon `lucide-react`.
+
+Tidak boleh:
+
+- Menulis `"use client"`, `useState`, atau `useEffect`.
+- Memanggil `lib/services` secara langsung.
+- Membuat atau mengubah tipe, komponen `ui`, `shared`, dan `modules`.
+- Menjalankan `npm install` atau mengubah `package.json`.
+
+Butuh komponen atau perubahan di luar itu? Buka issue berlabel `minta-komponen` dan sebut pemiliknya (Tim A).
+
+## Aturan khusus Tim B dan Tim C (mode tampilan)
+
+Tim B dan Tim C hanya mengerjakan susunan dan gaya halaman.
+
+Boleh:
+
+- Mengedit `page.tsx` di folder halaman masing-masing.
+- Menyusun komponen dari `components/ui`, `components/shared`, dan `components/modules`.
+- Gaya Tailwind, teks, dan ikon `lucide-react`.
+
+Tidak boleh:
+
+- Menulis `"use client"`, `useState`, atau `useEffect`.
+- Memanggil `lib/services` secara langsung.
+- Membuat atau mengubah tipe, komponen `ui`, `shared`, dan `modules`.
+- Menjalankan `npm install` atau mengubah `package.json`.
+
+Butuh komponen atau perubahan di luar itu? Buka issue berlabel `minta-komponen` dan sebut pemiliknya (Tim A).
