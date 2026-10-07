@@ -6,8 +6,13 @@ import type {
   NewSubmissionInput,
   UploadedFile,
 } from "@/types/layanan";
+import type { UserProfile } from "@/types/auth";
 
-const store: SubmissionRecord[] = [...SUBMISSIONS];
+const store: SubmissionRecord[] = structuredClone(SUBMISSIONS);
+
+function cloneRecord(record: SubmissionRecord): SubmissionRecord {
+  return structuredClone(record);
+}
 
 function find(id: string): SubmissionRecord {
   const item = store.find((s) => s.id === id);
@@ -23,17 +28,17 @@ export async function getSubmissions(
       (!filter.prodi || s.prodi === filter.prodi) &&
       (!filter.serviceId || s.serviceId === filter.serviceId) &&
       (!filter.status || s.status === filter.status)
-  );
+  ).map(cloneRecord);
 }
 
 export async function getSubmissionsByStudent(
   studentId: string
 ): Promise<SubmissionRecord[]> {
-  return store.filter((s) => s.studentId === studentId);
+  return store.filter((s) => s.studentId === studentId).map(cloneRecord);
 }
 
 export async function getServices() {
-  return SERVICES;
+  return structuredClone(SERVICES);
 }
 
 export async function createSubmission(
@@ -50,28 +55,33 @@ export async function createSubmission(
     dataForm: input.dataForm,
     berkas: input.berkas,
   };
-  store.push(record);
-  return record;
+  store.push(cloneRecord(record));
+  return cloneRecord(record);
 }
 
 export async function resubmitRevision(
   id: string,
-  berkas: UploadedFile[]
+  berkas: UploadedFile[],
+  dataForm: Record<string, string>
 ): Promise<SubmissionRecord> {
   const item = find(id);
   if (item.status !== "revisi") {
     throw new Error("Pengajuan hanya dapat diajukan ulang jika berstatus revisi");
   }
-  item.berkas = berkas;
+  item.berkas = structuredClone(berkas);
+  item.dataForm = structuredClone(dataForm);
   item.status = "diproses";
   item.catatanRevisi = undefined;
-  return item;
+  return cloneRecord(item);
 }
 
 export async function approveSubmission(
   id: string,
-  tendikName: string
+  actor: UserProfile
 ): Promise<SubmissionRecord> {
+  if (actor.role !== "tendik") {
+    throw new Error("Hanya Tendik yang dapat menyetujui pengajuan");
+  }
   const item = find(id);
   if (item.status !== "diproses") {
     throw new Error("Pengajuan hanya dapat disetujui jika berstatus diproses");
@@ -80,33 +90,41 @@ export async function approveSubmission(
   item.status = "selesai";
   item.nomorSurat = letter.nomorSurat;
   item.pdfUrl = letter.pdfUrl;
-  item.diverifikasiOleh = tendikName;
+  item.diverifikasiOleh = actor.name;
   item.tanggalTerbit = new Date().toISOString().slice(0, 10);
-  return item;
+  return cloneRecord(item);
 }
 
 export async function requestRevision(
   id: string,
-  catatan: string
+  catatan: string,
+  actor: UserProfile
 ): Promise<SubmissionRecord> {
+  if (actor.role !== "tendik") {
+    throw new Error("Hanya Tendik yang dapat meminta revisi pengajuan");
+  }
   const item = find(id);
   if (item.status !== "diproses") {
     throw new Error("Revisi hanya dapat diminta jika pengajuan berstatus diproses");
   }
   item.status = "revisi";
   item.catatanRevisi = catatan;
-  return item;
+  return cloneRecord(item);
 }
 
 export async function rejectSubmission(
   id: string,
-  alasan: string
+  alasan: string,
+  actor: UserProfile
 ): Promise<SubmissionRecord> {
+  if (actor.role !== "tendik") {
+    throw new Error("Hanya Tendik yang dapat menolak pengajuan");
+  }
   const item = find(id);
   if (item.status !== "diproses") {
     throw new Error("Pengajuan hanya dapat ditolak jika berstatus diproses");
   }
   item.status = "ditolak";
   item.alasanTolak = alasan;
-  return item;
+  return cloneRecord(item);
 }

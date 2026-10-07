@@ -1,4 +1,4 @@
-import { getSubmissions } from "./submissions";
+import { getSubmissions } from "@/lib/services/submissions";
 import { PRODI_LIST } from "@/lib/mock-data";
 import type { ProdiType } from "@/types/auth";
 import type { SummaryStats, TrendPoint } from "@/types/layanan";
