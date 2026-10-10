@@ -1,4 +1,4 @@
-import type { ProdiType } from "./auth";
+import type { ProdiType } from "@/types/auth";
 
 export type SubmissionStatus = "diproses" | "revisi" | "ditolak" | "selesai";
 

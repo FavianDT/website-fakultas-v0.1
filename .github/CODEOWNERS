@@ -1,8 +1,8 @@
 # Pemilik folder. Ganti dengan username GitHub masing-masing.
-/src/types/                              @a1
-/src/lib/                                @a1
-/src/hooks/                              @a1
-/docs/                                   @a1
+/src/types/                              @FavianDT
+/src/lib/                                @FavianDT
+/src/hooks/                              @FavianDT
+/docs/                                   @FavianDT
 
 /src/proxy.ts                            @a2
 /src/app/(auth)/                         @a2
@@ -13,11 +13,11 @@
 /src/components/ui/                      @a3
 /src/app/verify/                         @a3
 /src/lib/documents/                      @a3
+/src/components/modules/staff/           @a3
+/src/components/modules/executive/       @a3
+/src/components/modules/student/         @a3
 
 /src/app/dashboard/student/              @b1 @b2 @b3
-/src/components/modules/student/         @b1 @b2 @b3
 
 /src/app/dashboard/staff/                @c1 @c2
 /src/app/dashboard/executive/            @c3
-/src/components/modules/staff/           @c1 @c2
-/src/components/modules/executive/       @c3

@@ -1,8 +1,12 @@
 import { PAYMENTS } from "@/lib/mock-data";
 import type { PaymentRecord, NewPaymentInput, UploadedFile } from "@/types/layanan";
-import type { ProdiType } from "@/types/auth";
+import type { ProdiType, UserProfile } from "@/types/auth";
 
-const store: PaymentRecord[] = [...PAYMENTS];
+const store: PaymentRecord[] = structuredClone(PAYMENTS);
+
+function cloneRecord(record: PaymentRecord): PaymentRecord {
+  return structuredClone(record);
+}
 
 export async function getPayments(
   filter: { prodi?: ProdiType; studentId?: string } = {}
@@ -11,7 +15,7 @@ export async function getPayments(
     (p) =>
       (!filter.prodi || p.prodi === filter.prodi) &&
       (!filter.studentId || p.studentId === filter.studentId)
-  );
+  ).map(cloneRecord);
 }
 
 export async function createPayment(
@@ -28,16 +32,19 @@ export async function createPayment(
     status: "diproses",
     tanggalAjuan: new Date().toISOString().slice(0, 10),
   };
-  store.push(record);
-  return record;
+  store.push(cloneRecord(record));
+  return cloneRecord(record);
 }
 
 export async function verifyPayment(
   id: string,
   keputusan: "selesai" | "ditolak" | "revisi",
-  tendikName: string,
+  actor: UserProfile,
   catatan?: string
 ): Promise<PaymentRecord> {
+  if (actor.role !== "tendik") {
+    throw new Error("Hanya Tendik yang dapat memverifikasi pembayaran");
+  }
   const item = store.find((p) => p.id === id);
   if (!item) throw new Error(`Pembayaran ${id} tidak ditemukan`);
   if (item.status !== "diproses") {
@@ -48,8 +55,8 @@ export async function verifyPayment(
   }
   item.status = keputusan;
   item.catatan = catatan;
-  item.diverifikasiOleh = tendikName;
-  return item;
+  item.diverifikasiOleh = actor.name;
+  return cloneRecord(item);
 }
 
 export async function resubmitPayment(
@@ -61,8 +68,8 @@ export async function resubmitPayment(
   if (item.status !== "revisi") {
     throw new Error("Pembayaran hanya dapat diajukan ulang jika berstatus revisi");
   }
-  item.buktiTransfer = buktiTransfer;
+  item.buktiTransfer = structuredClone(buktiTransfer);
   item.status = "diproses";
   item.catatan = undefined;
-  return item;
+  return cloneRecord(item);
 }
