@@ -1,10 +1,10 @@
 "use client";
 
 import { Bell, ChevronDown, LogOut, Menu, UserCircle2 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import type { DashboardRole } from "@/components/shared/DashboardLayout";
+import { useSession } from "@/hooks/useSession";
 
 export function Header({
   role,
@@ -13,19 +13,8 @@ export function Header({
   role: DashboardRole;
   onToggleMobileMenu: () => void;
 }) {
-  const router = useRouter();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-
-  const handleLogout = () => {
-    try {
-      localStorage.removeItem("user");
-      localStorage.removeItem("role");
-    } catch {
-      // Fallback for environments without localStorage access.
-    }
-
-    router.push("/login");
-  };
+  const { user, isLoading, error, logout } = useSession();
 
   const roleLabel: Record<DashboardRole, string> = {
     student: "Mahasiswa",
@@ -85,7 +74,9 @@ export function Header({
                 <span className="block text-[10px] uppercase tracking-[0.2em] text-slate-500">
                   {roleLabel[role]}
                 </span>
-                <span className="block font-medium">Pengguna</span>
+                <span className="block font-medium">
+                  {isLoading && !user ? "Memuat..." : user?.name ?? "Pengguna"}
+                </span>
               </span>
               <ChevronDown className="h-4 w-4" />
             </button>
@@ -94,15 +85,18 @@ export function Header({
               <div className="absolute right-0 mt-2 w-44 rounded-xl border border-slate-200 bg-white p-2 shadow-lg">
                 <button
                   type="button"
-                  onClick={() => {
-                    setIsProfileOpen(false);
-                    handleLogout();
-                  }}
-                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#00964D]/30"
+                  onClick={() => void logout()}
+                  disabled={isLoading}
+                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#00964D]/30 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   <LogOut className="h-4 w-4" />
                   Logout
                 </button>
+                {error ? (
+                  <p className="mt-1 px-3 py-2 text-xs text-red-700" role="alert">
+                    {error}
+                  </p>
+                ) : null}
               </div>
             ) : null}
           </div>
