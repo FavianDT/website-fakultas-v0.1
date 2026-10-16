@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
+import { DashboardLayout } from "@/components/shared/DashboardLayout";
 
-export default function Layout({ children }: { children: ReactNode }) {
-  return <>{children}</>;
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return <DashboardLayout role="executive">{children}</DashboardLayout>;
 }
